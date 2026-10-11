@@ -16,7 +16,94 @@
     5. Market data depends on the public CoinGecko API and may be rate-limited.
   -->
 
-  <style>
+  <
+/* Galaxy glass panels */
+.panel,
+.card,
+.stat,
+.market-card {
+  background: rgba(7, 19, 45, 0.82);
+  border: 1px solid rgba(75, 160, 255, 0.3);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+
+a {
+  color: #40d9ff;
+}
+
+button {
+  cursor: pointer;
+}
+style
+/* DanielX-BTC 2027 Galaxy Background */
+html {
+  min-height: 100%;
+  background: #030611;
+}
+
+body {
+  min-height: 100vh;
+  background-color: #030611;
+  background-image:
+    radial-gradient(
+      ellipse at 20% 20%,
+      rgba(30, 75, 180, 0.55),
+      transparent 42%
+    ),
+    radial-gradient(
+      ellipse at 80% 15%,
+      rgba(120, 35, 180, 0.42),
+      transparent 38%
+    ),
+    radial-gradient(
+      ellipse at 50% 80%,
+      rgba(0, 150, 200, 0.25),
+      transparent 45%
+    ),
+    linear-gradient(
+      145deg,
+      #02040d,
+      #07132e,
+      #100720
+    );
+  background-attachment: fixed;
+  color: #eef5ff;
+}
+
+/* Stars across the galaxy */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.75;
+  background-image:
+    radial-gradient(
+      2px 2px at 15% 25%,
+      #ffffff 98%,
+      transparent
+    ),
+    radial-gradient(
+      1px 1px at 35% 70%,
+      #8ceaff 98%,
+      transparent
+    ),
+    radial-gradient(
+      2px 2px at 65% 35%,
+      #ffffff 98%,
+      transparent
+    ),
+    radial-gradient(
+      1px 1px at 85% 80%,
+      #c7a8ff 98%,
+      transparent
+    );
+  background-size: 260px 240px;
+}
+>
     :root {
       color-scheme: dark;
       --bg: #020617;
