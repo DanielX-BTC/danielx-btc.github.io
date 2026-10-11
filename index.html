@@ -1,38 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="DanielX-BTC cryptocurrency market dashboard with live prices, market capitalisation and 24-hour changes.">
+  <meta name="theme-color" content="#07111f">
+  <title>DanielX-BTC | Live Crypto Market</title>
+  <style>
+    :root{color-scheme:dark;--bg:#07111f;--panel:#101d30;--panel2:#0b1728;--line:#22344d;--text:#f3f7ff;--muted:#9db0c9;--blue:#60a5fa;--green:#34d399;--red:#fb7185}
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(circle at top right,#102746 0,transparent 35%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    a{color:var(--blue)}
+    .wrap{width:min(1180px,100% - 28px);margin:auto}
+    header{border-bottom:1px solid var(--line);background:#07111fe8;position:sticky;top:0;z-index:5;backdrop-filter:blur(12px)}
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:70px}
+    .brand{font-weight:850;font-size:1.22rem;letter-spacing:.2px}.brand span{color:var(--blue)}
+    nav{display:flex;gap:18px;flex-wrap:wrap}nav a{text-decoration:none;color:var(--muted);font-size:.92rem}nav a:hover{color:white}
+    .status{font-size:.8rem;color:var(--green);display:flex;align-items:center;gap:7px}
+    .dot{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}
+    main{padding:34px 0 50px}
+    .eyebrow{color:var(--blue);font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px}
+    h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.08;margin:10px 0}
+    .intro{color:var(--muted);max-width:720px;line-height:1.7;margin:0 0 24px}
+    .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:20px 0 22px}
+    button,select{background:#172943;border:1px solid #314967;color:var(--text);border-radius:10px;padding:11px 14px;font:inherit}
+    button{cursor:pointer;font-weight:700}button.primary{background:#2563eb;border-color:#2563eb}button:disabled{opacity:.6;cursor:wait}
+    .updated{color:var(--muted);font-size:.82rem}
+    .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:20px 0}
+    .card,.panel{background:linear-gradient(145deg,#12223a,#0d192b);border:1px solid var(--line);border-radius:16px;padding:19px;min-width:0}
+    .label{color:var(--muted);font-size:.86rem}.big{font-size:clamp(1.35rem,3vw,2rem);font-weight:800;margin:9px 0 5px;overflow-wrap:anywhere}
+    .sub{font-size:.84rem;color:var(--muted)}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:34px 0 14px;flex-wrap:wrap}
+    h2{font-size:1.3rem;margin:0}.section-head p{color:var(--muted);margin:6px 0 0;font-size:.9rem}
+    .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel2)}
+    table{width:100%;border-collapse:collapse;min-width:720px}
+    th,td{text-align:right;padding:15px 16px;border-bottom:1px solid var(--line);white-space:nowrap}
+    th{color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+    th:first-child,td:first-child{text-align:left}
+    tbody tr:last-child td{border-bottom:0}
+    .coin{display:flex;align-items:center;gap:11px}.coin img{width:34px;height:34px;border-radius:50%;background:#fff}.coin-name{font-weight:750}.symbol{color:var(--muted);font-size:.8rem;margin-top:3px}
+    .positive{color:var(--green)}.negative{color:var(--red)}.muted{color:var(--muted)}
+    .lower{display:grid;grid-template-columns:1.3fr 1fr;gap:14px;margin-top:18px}
+    .chart-area{height:210px;position:relative;margin-top:14px}
+    canvas{width:100%;height:100%;display:block}
+    .chart-note{color:var(--muted);font-size:.8rem;margin-top:9px}
+    .watchlist{display:grid;gap:0;margin-top:8px}.watchrow{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.watchrow:last-child{border-bottom:0}
+    .error{display:none;border:1px solid #85414c;background:#3a1722;color:#ffd3da;padding:13px 15px;border-radius:10px;margin:12px 0;line-height:1.5}
+    .notice{border:1px solid var(--line);background:#0a1626;border-radius:12px;padding:15px;color:var(--muted);font-size:.85rem;line-height:1.65;margin-top:24px}
+    footer{border-top:1px solid var(--line);padding:24px 0 34px;color:var(--muted);font-size:.84rem;line-height:1.7}
+    .ad-slot{min-height:70px;border:1px dashed #31445d;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#8193ac;text-align:center;padding:12px;margin-top:18px;font-size:.82rem}
+    @media(max-width:760px){.cards{grid-template-columns:1fr}.lower{grid-template-columns:1fr}.nav{align-items:flex-start;padding:16px 0;flex-direction:column}nav{gap:13px}main{padding-top:25px}.card{padding:16px}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <div class="brand">DanielX<span>-BTC</span></div>
+    <nav aria-label="Main navigation">
+      <a href="#markets">Markets</a><a href="#chart">XRP Chart</a><a href="#watchlist">Watchlist</a><a href="#about">About</a>
+    </nav>
+    <div class="status"><span class="dot"></span><span id="connection">Connecting to market data…</span></div>
+  </div>
+</header>
 
-DanielX-BTC | Crypto Market & Krypton News :root{--bg:#07101d;--panel:#101c2d;--text:#edf4ff;--muted:#9eb0c8;--line:#263952;--green:#2bd9a1;--red:#ff6e7b;--blue:#66a8ff;--gold:#ffd166} *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#102641 0,#07101d 55%);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif} a{color:var(--blue)}.wrap{max-width:1120px;margin:auto;padding:16px}.top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:12px 0 20px}.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#2bd9a1,#377dff);color:#06111e;font-weight:900;font-size:20px}.brand h1{font-size:22px;margin:0}.brand p{margin:2px 0 0;color:var(--muted);font-size:12px}.live{display:inline-flex;align-items:center;gap:7px;color:var(--green);font-size:12px;font-weight:800}.dot{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}.hero{padding:22px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(120deg,#132942,#101b2d 70%);margin-bottom:18px}.hero h2{font-size:clamp(26px,5vw,42px);line-height:1.1;margin:0 0 10px}.hero p{color:var(--muted);margin:0 0 16px;max-width:720px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn{display:inline-flex;justify-content:center;align-items:center;text-decoration:none;border:1px solid var(--line);border-radius:12px;padding:11px 15px;color:var(--text);font-weight:750;background:#182a42;cursor:pointer}.btn.primary{background:var(--green);border-color:var(--green);color:#061b17}.btn.whatsapp{background:#128c55;border-color:#128c55;color:#fff}.section{margin:24px 0}.section-head{display:flex;align-items:end;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}.section h2{font-size:21px;margin:0}.sub{color:var(--muted);font-size:13px;margin:4px 0 0}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.card{min-width:0;border:1px solid var(--line);border-radius:17px;background:rgba(16,28,45,.94);padding:16px}.coinhead{display:flex;justify-content:space-between;align-items:center;gap:8px}.coinname{font-weight:800}.symbol{color:var(--muted);font-size:12px}.price{font-size:25px;font-weight:850;margin:13px 0 4px;overflow-wrap:anywhere}.change{font-weight:750;font-size:13px}.positive{color:var(--green)}.negative{color:var(--red)}.stat{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:12px;margin-top:10px}.stat strong{color:var(--text);text-align:right}.pill{font-size:11px;padding:4px 8px;border-radius:20px;background:#20334b;color:#c7d8ee}.newslist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.newsitem{display:flex;flex-direction:column;gap:9px}.newsitem h3{font-size:16px;line-height:1.35;margin:0}.newsitem p{font-size:13px;color:var(--muted);margin:0}.meta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:11px}.tag{font-size:10px;letter-spacing:.6px;font-weight:850;text-transform:uppercase;color:var(--gold)}.error{color:var(--gold)}.disclaimer{border:1px solid #5b4b2a;background:#292316;color:#f4ddb0;padding:13px 15px;border-radius:13px;font-size:12px}.contact{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}.contact strong{font-size:18px}.footer{border-top:1px solid var(--line);margin-top:30px;padding:20px 0 32px;color:var(--muted);font-size:12px}.footer a{margin-right:12px}.small{font-size:12px;color:var(--muted)}.spinner{display:inline-block;width:12px;height:12px;border:2px solid #45617e;border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;vertical-align:-2px;margin-right:5px}@keyframes spin{to{transform:rotate(360deg)}}@media(max-width:760px){.grid,.newslist{grid-template-columns:1fr}.wrap{padding:13px}.hero{padding:18px}.brand h1{font-size:19px}.price{font-size:28px}}@media(prefers-reduced-motion:reduce){*{animation:none!important}} 
-DX
-DanielX-BTC
-Crypto markets · News · Regulatory signals
-CONNECTING TO LIVE DATA
-Make sense of the crypto market.
-Follow Bitcoin, XRP and the wider digital-asset market with market data, crypto headlines and regulatory developments from published sources.
-View Live MarketKrypton NewsRegulatory Signals
-Live Market Overview
-Prices and market capitalisation from CoinGecko's public API. Refreshes about every 60 seconds.
-Waiting for data
-Loading Bitcoin, XRP and Ethereum…
-Data may be delayed or unavailable due to provider limits. Periodic refresh is not exchange tick-by-tick data.
-Krypton News
-Crypto headlines with links to the original publishers.
-Browse CoinDesk
-Loading crypto headlines…
-Headlines are supplied by a third-party feed. Verify important details with the original publisher.
-Regulatory Signals
-Crypto policy and regulator headlines. These are news signals, not official legal determinations.
-Source-linked
-Loading regulatory updates…
-Official sources to monitor
-Check the regulator's own notice before acting on a headline.
-US SEC Newsroom · UK FCA News · Central Bank of Nigeria · IOSCO News
-Contact Daniel
-Connect on WhatsApp
-For questions or business enquiries, message us directly.
-+234 907 421 1002
-Chat on WhatsApp ↗
-Important: DanielX-BTC provides general information only, not financial, investment or legal advice. Cryptocurrency prices can change rapidly. News and regulatory summaries may be incomplete; consult official notices and qualified professionals. Never invest money you cannot afford to lose.
-DanielX-BTC · Independent crypto information dashboard. 
-Market data: CoinGecko. News and linked articles belong to their respective publishers.
-ContactMarketsNewsRegulatory signals
-For AdSense readiness, add your own Privacy Policy and About page, ensure the site has substantial original content, and follow Google publisher policies. This code cannot guarantee approval or income.
-"use strict"; const money=n=>n==null||!Number.isFinite(Number(n))?"Unavailable":new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:Number(n)<1?6:2}).format(Number(n)); const compact=n=>n==null||!Number.isFinite(Number(n))?"Unavailable":new Intl.NumberFormat("en-US",{notation:"compact",maximumFractionDigits:2}).format(Number(n)); const safe=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); const timeLabel=d=>{try{return new Date(d).toLocaleString()}catch{return "Time unavailable"}}; async function loadMarkets(){ const box=document.getElementById("market-cards"); try{ const url="https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ripple,ethereum&order=market_cap_desc&per_page=3&page=1&sparkline=false&price_change_percentage=24h"; const res=await fetch(url,{headers:{accept:"application/json"},cache:"no-store"});if(!res.ok)throw Error("Market provider unavailable"); const coins=await res.json();if(!Array.isArray(coins)||!coins.length)throw Error("No data returned"); box.innerHTML=coins.map(c=>{const ch=Number(c.price_change_percentage_24h),cls=Number.isFinite(ch)&&ch>=0?"positive":"negative"; return `<article class="card"><div class="coinhead"><div><div class="coinname">${safe(c.name)}</div><div class="symbol">${safe(String(c.symbol||"").toUpperCase())}</div></div><span class="pill">Rank #${safe(c.market_cap_rank??"—")}</span></div> <div class="price">${money(c.current_price)}</div><div class="change ${cls}">${Number.isFinite(ch)?(ch>0?"+":"")+ch.toFixed(2)+"%":"Change unavailable"} <span class="symbol">24h</span></div> <div class="stat"><span>Market cap</span><strong>${c.market_cap?"$"+compact(c.market_cap):"Unavailable"}</strong></div><div class="stat"><span>24h volume</span><strong>${c.total_volume?"$"+compact(c.total_volume):"Unavailable"}</strong></div></article>`; }).join(""); document.getElementById("market-updated").textContent="Updated "+new Date().toLocaleTimeString();document.getElementById("connection").textContent="MARKET DATA CONNECTED"; }catch(e){box.innerHTML='<article class="card error"><strong>Market data temporarily unavailable.</strong><p class="sub">The provider may be rate-limiting requests or your connection may be offline. Try again shortly.</p><button class="btn" onclick="loadMarkets()">Retry market data</button></article>';document.getElementById("market-updated").textContent="Update failed";document.getElementById("connection").textContent="DATA CONNECTION ISSUE";} } function renderNews(items,containerId,emptyText,regulatory=false){ const el=document.getElementById(containerId);if(!items||!items.length){el.innerHTML=`<article class="card">${safe(emptyText)}</article>`;return} el.innerHTML=items.slice(0,8).map(item=>{const title=item.title||"Untitled article",link=item.link||item.url||"#",source=item.author||item.source||"News source",date=item.pubDate||item.published_at||item.isoDate||"",desc=String(item.description||item.content||"").replace(/<[^>]*>/g," ").trim().slice(0,220); return `<article class="card newsitem"><span class="tag">${regulatory?"REGULATORY SIGNAL":"KRYPTON NEWS"}</span><h3><a href="${safe(link)}" target="_blank" rel="noopener noreferrer">${safe(title)}</a></h3>${desc?`<p>${safe(desc)}${desc.length>=220?"…":""}</p>`:""}<div class="meta"><span>${safe(source)}</span><span>${date?safe(timeLabel(date)):"Date not supplied"}</span></div></article>`}).join(""); } async function loadNews(){ const feed="https://www.coindesk.com/arc/outboundfeeds/rss/",url="https://api.rss2json.com/v1/api.json?rss_url="+encodeURIComponent(feed); try{const r=await fetch(url,{cache:"no-store"});if(!r.ok)throw Error();const d=await r.json();if(d.status!=="ok"||!Array.isArray(d.items))throw Error();renderNews(d.items,"news-list","No headlines are available right now.");} catch(e){document.getElementById("news-list").innerHTML='<article class="card"><strong>Headlines could not load.</strong><p class="sub">Open a news publisher directly or retry later.</p><p><a href="https://www.coindesk.com/" target="_blank" rel="noopener noreferrer">CoinDesk</a> · <a href="https://cointelegraph.com/" target="_blank" rel="noopener noreferrer">Cointelegraph</a></p><button class="btn" onclick="loadNews()">Retry news</button></article>';} } async function loadRegulatory(){ const q='(cryptocurrency OR crypto OR bitcoin OR XRP) (regulation OR regulator OR SEC OR FCA OR CBN OR legislation OR enforcement)'; const feed="https://news.google.com/rss/search?q="+encodeURIComponent(q)+"&hl=en-US&gl=US&ceid=US:en"; const url="https://api.rss2json.com/v1/api.json?rss_url="+encodeURIComponent(feed); try{const r=await fetch(url,{cache:"no-store"});if(!r.ok)throw Error();const d=await r.json();if(d.status!=="ok"||!Array.isArray(d.items))throw Error();renderNews(d.items,"reg-list","No regulatory headlines are available right now.",true);} catch(e){document.getElementById("reg-list").innerHTML='<article class="card"><strong>Regulatory feed could not load.</strong><p class="sub">Use official regulator links below to check current notices.</p><a href="https://news.google.com/search?q=crypto%20regulation" target="_blank" rel="noopener noreferrer">Search current crypto regulation news ↗</a><p><button class="btn" onclick="loadRegulatory()">Retry regulatory feed</button></p></article>';} } loadMarkets();loadNews();loadRegulatory();setInterval(loadMarkets,60000);setInterval(loadNews,300000);setInterval(loadRegulatory,300000); '''
-path = Path("/mnt/data/HTML.html") path.write_text(html, encoding="utf-8") print(f"Created {path.name} ({path.stat().st_size:,} bytes)")
+<main class="wrap">
+  <div class="eyebrow">Cryptocurrency market dashboard</div>
+  <h1>Live Crypto Market</h1>
+  <p class="intro">Follow cryptocurrency prices, market capitalisation and 24-hour market moves in one place. Market figures are supplied by CoinGecko and may be delayed or temporarily unavailable.</p>
+
+  <div class="toolbar">
+    <button class="primary" id="refreshBtn" type="button">↻ Refresh market data</button>
+    <label class="muted" for="currency">Currency</label>
+    <select id="currency"><option value="usd">USD ($)</option><option value="ngn">NGN (₦)</option><option value="eur">EUR (€)</option><option value="gbp">GBP (£)</option></select>
+    <span class="updated" id="updated">Waiting for first update…</span>
+  </div>
+  <div class="error" id="errorBox" role="alert"></div>
+
+  <section class="cards" aria-label="Market overview">
+    <div class="card"><div class="label">Total crypto market cap</div><div class="big" id="totalCap">Loading…</div><div class="sub" id="capChange">Global market overview</div></div>
+    <div class="card"><div class="label">24-hour trading volume</div><div class="big" id="totalVolume">Loading…</div><div class="sub">Reported global trading volume</div></div>
+    <div class="card"><div class="label">Bitcoin market dominance</div><div class="big" id="btcDominance">Loading…</div><div class="sub">Bitcoin share of total crypto market cap</div></div>
+  </section>
+
+  <div class="section-head" id="markets">
+    <div><h2>Market prices</h2><p>Live API values when available; refreshes about every 60 seconds.</p></div>
+    <span class="muted" id="marketCount">Loading coins…</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Asset</th><th>Price</th><th>24h change</th><th>Market cap</th><th>24h volume</th></tr></thead>
+      <tbody id="coinRows"><tr><td colspan="5" class="muted">Loading market data…</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="lower">
+    <section class="panel" id="chart">
+      <h2>XRP price trend</h2>
+      <p class="sub">Recent daily price history from CoinGecko, when available.</p>
+      <div class="chart-area"><canvas id="xrpChart" aria-label="XRP price history chart"></canvas></div>
+      <div class="chart-note" id="chartNote">Chart loads after market data.</div>
+    </section>
+    <section class="panel" id="watchlist">
+      <h2>Your watchlist</h2>
+      <p class="sub">A quick view of selected assets.</p>
+      <div class="watchlist" id="watchRows"><div class="muted">Loading watchlist…</div></div>
+    </section>
+  </div>
+
+  <div class="ad-slot" aria-label="Advertising area">Advertising area — Google ads will appear here only if AdSense approves your site and ad code is correctly installed.</div>
+
+  <section class="notice" id="about">
+    <strong>Data and risk notice:</strong> This page displays market information for educational purposes only. Prices and market figures can change quickly, and API data may be delayed, incomplete or unavailable. This website is not a trading platform and does not provide investment advice. Always verify figures before making financial decisions.
+  </section>
+</main>
+
+<footer><div class="wrap">© <span id="year"></span> DanielX-BTC. Market data provided by <a href="https://www.coingecko.com/" target="_blank" rel="noopener noreferrer">CoinGecko</a>. No affiliation with or endorsement by CoinGecko is implied.</div></footer>
+
+<script>
+(() => {
+  "use strict";
+  const $ = id => document.getElementById(id);
+  const ids = ["bitcoin", "ripple", "sologenic"];
+  const names = {bitcoin:"Bitcoin", ripple:"XRP", sologenic:"Sologenic"};
+  const symbols = {bitcoin:"BTC", ripple:"XRP", sologenic:"SOLO"};
+  const currencySymbols = {usd:"$",ngn:"₦",eur:"€",gbp:"£"};
+  let currency = "usd";
+  let coins = [];
+  let refreshTimer = null;
+
+  $("year").textContent = new Date().getFullYear();
+
+  function money(value, digits=2) {
+    if (value == null || !Number.isFinite(Number(value))) return "Unavailable";
+    try {
+      return new Intl.NumberFormat("en-US", {
+        style:"currency", currency:currency.toUpperCase(),
+        maximumFractionDigits:Math.abs(value)<1 ? 6 : digits
+      }).format(value);
+    } catch (_) {
+      return (currencySymbols[currency] || "") + Number(value).toLocaleString("en-US");
+    }
+  }
+  function compact(value) {
+    if (value == null || !Number.isFinite(Number(value))) return "Unavailable";
+    try {
+      return new Intl.NumberFormat("en-US",{notation:"compact",maximumFractionDigits:2}).format(value);
+    } catch (_) { return Number(value).toLocaleString("en-US"); }
+  }
+  function pct(value) {
+    if (value == null || !Number.isFinite(Number(value))) return '<span class="muted">—</span>';
+    const cls = value >= 0 ? "positive" : "negative";
+    return `<span class="${cls}">${value >= 0 ? "+" : ""}${Number(value).toFixed(2)}%</span>`;
+  }
+  function safeText(value) {
+    return String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+  }
+  function showError(message) {
+    $("errorBox").textContent = message;
+    $("errorBox").style.display = "block";
+  }
+  function clearError() {
+    $("errorBox").textContent = "";
+    $("errorBox").style.display = "none";
+  }
+  async function getJSON(url) {
+    const response = await fetch(url, {headers:{"accept":"application/json"}});
+    if (!response.ok) throw new Error(`Market data request failed (${response.status}).`);
+    return response.json();
+  }
+  function renderGlobal(data) {
+    const q = data.data || {};
+    const total = q.total_market_cap?.[currency];
+    const volume = q.total_volume?.[currency];
+    $("totalCap").textContent = total == null ? "Unavailable" : currencySymbols[currency] + compact(total);
+    $("totalVolume").textContent = volume == null ? "Unavailable" : currencySymbols[currency] + compact(volume);
+    const dominance = q.market_cap_percentage?.btc;
+    $("btcDominance").textContent = dominance == null ? "Unavailable" : Number(dominance).toFixed(2) + "%";
+    const change = q.market_cap_change_percentage_24h_usd;
+    $("capChange").innerHTML = change == null ? "24-hour change unavailable" : `24h market cap change: ${pct(change)}`;
+  }
+  function renderCoins(list) {
+    coins = list || [];
+    const available = coins.filter(c => c && c.id);
+    $("marketCount").textContent = `${available.length} asset${available.length===1?"":"s"} loaded`;
+    if (!available.length) {
+      $("coinRows").innerHTML = '<tr><td colspan="5" class="muted">Market data is not available right now. Try refreshing shortly.</td></tr>';
+      $("watchRows").innerHTML = '<div class="muted">Watchlist data unavailable.</div>';
+      return;
+    }
+    $("coinRows").innerHTML = available.map(c => {
+      const icon = c.image ? `<img src="${safeText(c.image)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : "";
+      const price = c.current_price == null ? "Unavailable" : money(c.current_price, 6);
+      const cap = c.market_cap == null ? "Unavailable" : currencySymbols[currency] + compact(c.market_cap);
+      const vol = c.total_volume == null ? "Unavailable" : currencySymbols[currency] + compact(c.total_volume);
+      return `<tr>
+        <td><div class="coin">${icon}<div><div class="coin-name">${safeText(c.name || names[c.id] || c.id)}</div><div class="symbol">${safeText((c.symbol || symbols[c.id] || "").toUpperCase())}</div></div></div></td>
+        <td>${price}</td><td>${pct(c.price_change_percentage_24h)}</td><td>${cap}</td><td>${vol}</td>
+      </tr>`;
+    }).join("");
+    $("watchRows").innerHTML = available.map(c => `<div class="watchrow"><div><strong>${safeText(symbols[c.id] || (c.symbol||"").toUpperCase())}</strong><div class="sub">${safeText(names[c.id] || c.name || c.id)}</div></div><div style="text-align:right"><strong>${c.current_price==null?"Unavailable":money(c.current_price,6)}</strong><div>${pct(c.price_change_percentage_24h)}</div></div></div>`).join("");
+  }
+  function drawChart(values) {
+    const canvas = $("xrpChart");
+    const rect = canvas.getBoundingClientRect();
+    const ratio = window.devicePixelRatio || 1;
+    canvas.width = Math.max(1, Math.floor(rect.width * ratio));
+    canvas.height = Math.max(1, Math.floor(rect.height * ratio));
+    const ctx = canvas.getContext("2d");
+    ctx.scale(ratio, ratio);
+    const w = rect.width, h = rect.height;
+    ctx.clearRect(0,0,w,h);
+    if (!values || values.length < 2) {
+      $("chartNote").textContent = "Price history is temporarily unavailable.";
+      return;
+    }
+    const vals = values.map(p => Number(p[1])).filter(Number.isFinite);
+    if (vals.length < 2) return;
+    const min = Math.min(...vals), max = Math.max(...vals);
+    const pad = {l:8,r:8,t:16,b:22};
+    const cw = w-pad.l-pad.r, ch = h-pad.t-pad.b;
+    ctx.strokeStyle = "#243750"; ctx.lineWidth = 1;
+    for(let i=0;i<4;i++){const y=pad.t+(ch*i/3);ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(w-pad.r,y);ctx.stroke();}
+    const points = vals.map((v,i)=>({x:pad.l+(i/(vals.length-1))*cw,y:pad.t+ch-(max===min?.5:(v-min)/(max-min))*ch}));
+    const gradient = ctx.createLinearGradient(0,pad.t,0,h-pad.b);
+    gradient.addColorStop(0,"rgba(96,165,250,.28)"); gradient.addColorStop(1,"rgba(96,165,250,0)");
+    ctx.beginPath(); points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
+    ctx.lineTo(points[points.length-1].x,h-pad.b);ctx.lineTo(points[0].x,h-pad.b);ctx.closePath();ctx.fillStyle=gradient;ctx.fill();
+    ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
+    ctx.strokeStyle="#60a5fa";ctx.lineWidth=2.5;ctx.stroke();
+    $("chartNote").textContent = `Recent XRP price history in ${currency.toUpperCase()}. Range: ${money(min,6)} – ${money(max,6)}.`;
+  }
+  async function loadChart() {
+    try {
+      const data = await getJSON(`https://api.coingecko.com/api/v3/coins/ripple/market_chart?vs_currency=${encodeURIComponent(currency)}&days=7`);
+      drawChart(data.prices);
+    } catch (_) {
+      drawChart([]);
+    }
+  }
+  async function refresh() {
+    const btn = $("refreshBtn");
+    btn.disabled = true;
+    $("connection").textContent = "Updating market data…";
+    clearError();
+    try {
+      const root = "https://api.coingecko.com/api/v3";
+      const results = await Promise.all([
+        getJSON(`${root}/global`),
+        getJSON(`${root}/coins/markets?vs_currency=${encodeURIComponent(currency)}&ids=${ids.join("%2C")}&order=market_cap_desc&per_page=10&page=1&sparkline=false&price_change_percentage=24h`)
+      ]);
+      renderGlobal(results[0]);
+      renderCoins(results[1]);
+      $("connection").textContent = "Market data connected";
+      $("updated").textContent = "Last updated: " + new Date().toLocaleTimeString();
+      await loadChart();
+    } catch (err) {
+      $("connection").textContent = "Data temporarily unavailable";
+      showError((err && err.message ? err.message + " " : "") + "The public market-data service may be rate-limiting requests or your connection may be blocking it. Please try again later.");
+      if (!coins.length) {
+        $("coinRows").innerHTML = '<tr><td colspan="5" class="muted">No live data received yet. Please refresh later.</td></tr>';
+        $("watchRows").innerHTML = '<div class="muted">No live data received yet.</div>';
+      }
+    } finally {
+      btn.disabled = false;
+    }
+  }
+  $("refreshBtn").addEventListener("click", refresh);
+  $("currency").addEventListener("change", event => {
+    currency = event.target.value;
+    refresh();
+  });
+  window.addEventListener("resize", () => {
+    // Redraw the chart from the latest API data when the layout changes.
+    loadChart();
+  });
+  refresh();
+  refreshTimer = window.setInterval(refresh, 60000);
+})();
+</script>
+</body>
+  </html>
