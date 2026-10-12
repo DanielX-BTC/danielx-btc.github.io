@@ -3,154 +3,146 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="DanielX-BTC: cryptocurrency market prices, XRP charts, market watchlist and educational tools.">
-  <meta name="theme-color" content="#020617">
+  <meta name="description" content="DanielX-BTC is a cryptocurrency information dashboard with public market prices, XRP charts, a watchlist and educational tools.">
+  <meta name="theme-color" content="#030712">
   <title>DanielX-BTC | Crypto Market Dashboard</title>
-   <style>
+
+  <!-- Add the exact AdSense script supplied by your own AdSense account only when instructed to do so. -->
+  <style>
     :root {
       color-scheme: dark;
-      --bg: #020617;
-      --panel: #071126;
-      --panel2: #0b1730;
-      --line: #203454;
-      --text: #f8fafc;
-      --muted: #9aacc7;
-      --blue: #36b9ff;
-      --green: #24d18a;
-      --red: #ff667a;
+      --bg: #030712;
+      --panel: rgba(7, 19, 43, .86);
+      --panel2: rgba(10, 27, 57, .86);
+      --line: rgba(102, 168, 255, .25);
+      --text: #f4f8ff;
+      --muted: #a5b6d1;
+      --blue: #65c7ff;
+      --green: #42e6ae;
+      --red: #ff7b8b;
       --gold: #ffd166;
+      --radius: 18px;
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
-      margin: 0;
-      background: radial-gradient(circle at 50% -10%, #112b52 0, var(--bg) 43%);
-      color: var(--text);
+      margin: 0; color: var(--text);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-      line-height: 1.5;
+      line-height: 1.6;
+      background:
+        radial-gradient(ellipse at 12% 5%, rgba(30, 93, 175, .36), transparent 35%),
+        radial-gradient(ellipse at 88% 20%, rgba(87, 38, 156, .22), transparent 32%),
+        radial-gradient(ellipse at 50% 75%, rgba(10, 75, 125, .14), transparent 40%),
+        #030712;
+      background-attachment: fixed;
+    }
+    body::before {
+      content: ""; position: fixed; inset: 0; pointer-events: none; z-index: -1;
+      background-image:
+        radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.75) 50%, transparent 100%),
+        radial-gradient(1px 1px at 80% 12%, rgba(170,220,255,.75) 50%, transparent 100%),
+        radial-gradient(2px 2px at 65% 46%, rgba(255,255,255,.5) 50%, transparent 100%),
+        radial-gradient(1px 1px at 30% 70%, rgba(170,220,255,.6) 50%, transparent 100%),
+        radial-gradient(1px 1px at 92% 83%, rgba(255,255,255,.6) 50%, transparent 100%);
+      opacity: .8;
     }
     a { color: #9bdcff; }
     button, input, select { font: inherit; }
     button { cursor: pointer; }
+    button:disabled { opacity: .65; cursor: wait; }
     header {
       position: sticky; top: 0; z-index: 20;
-      background: rgba(2, 6, 23, .94);
-      backdrop-filter: blur(12px);
+      background: rgba(2, 6, 23, .91); backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--line);
     }
-    .top {
-      max-width: 1180px; margin: auto; padding: 14px 16px 8px;
-      display: flex; align-items: center; justify-content: space-between; gap: 14px;
-    }
-    .logo { font-size: clamp(22px, 4vw, 30px); font-weight: 900; letter-spacing: -.8px; }
-    .logo .accent { color: var(--green); }
+    .top, nav, main { width: min(1180px, 100%); margin-inline: auto; }
+    .top { padding: 13px 16px 8px; display:flex; align-items:center; justify-content:space-between; gap:14px; }
+    .logo { font-size: clamp(22px, 4vw, 30px); font-weight: 950; letter-spacing: -.8px; }
+    .logo .accent { color: var(--green); text-shadow: 0 0 18px rgba(66,230,174,.3); }
     .status { color: var(--muted); font-size: 12px; }
-    .dot { display: inline-block; width: 8px; height: 8px; background: var(--green); border-radius: 50%; margin-right: 6px; }
-    nav { max-width: 1180px; margin: auto; display: flex; gap: 4px; overflow-x: auto; padding: 3px 10px 0; }
-    nav a { flex: 0 0 auto; color: #d8e5f8; text-decoration: none; padding: 11px 13px; border-bottom: 3px solid transparent; }
-    nav a:hover, nav a:focus { color: var(--blue); border-color: var(--blue); }
-    main { max-width: 1180px; margin: auto; padding: 20px 16px 56px; }
-    .hero { padding: 14px 0 12px; }
-    h1 { font-size: clamp(30px, 5vw, 48px); line-height: 1.12; margin: 0 0 10px; }
-    h2 { font-size: clamp(22px, 3vw, 28px); margin: 0 0 14px; }
-    h3 { margin: 0 0 9px; }
-    .hero p { max-width: 760px; color: var(--muted); font-size: 17px; }
-    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 4px; }
-    .btn {
-      border: 0; border-radius: 11px; padding: 11px 15px; font-weight: 800;
-      background: var(--blue); color: #001321; text-decoration: none; display: inline-flex;
-      align-items: center; justify-content: center; min-height: 42px;
+    .dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--green); margin-right:6px; }
+    nav { display:flex; gap:4px; overflow-x:auto; padding: 3px 10px 0; }
+    nav a { flex:0 0 auto; color:#d8e5f8; text-decoration:none; padding:10px 13px; border-bottom:3px solid transparent; }
+    nav a:hover, nav a:focus { color:var(--blue); border-color:var(--blue); }
+    main { padding: 22px 16px 56px; }
+    .hero { padding: 14px 0 20px; }
+    .eyebrow { color:var(--green); font-weight:800; text-transform:uppercase; letter-spacing:.15em; font-size:12px; }
+    h1 { font-size:clamp(32px, 5.5vw, 52px); line-height:1.1; margin:8px 0 12px; letter-spacing:-1.2px; }
+    h2 { font-size:clamp(22px, 3vw, 28px); margin:0 0 14px; line-height:1.25; }
+    h3 { margin:0 0 9px; }
+    p { margin-top: 0; }
+    .hero p { max-width:760px; color:var(--muted); font-size:17px; }
+    .actions { display:flex; flex-wrap:wrap; gap:10px; margin:18px 0 4px; }
+    .btn { border:1px solid transparent; border-radius:11px; padding:11px 15px; font-weight:800; background:var(--blue); color:#001321; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; min-height:44px; }
+    .btn.secondary { background:rgba(20,39,68,.88); color:#e5efff; border-color:var(--line); }
+    .btn:hover { filter:brightness(1.08); }
+    .btn:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline:2px solid var(--gold); outline-offset:3px; }
+    .grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+    .card { min-width:0; background:linear-gradient(145deg, rgba(11,25,53,.88), rgba(4,12,29,.88)); border:1px solid var(--line); border-radius:var(--radius); padding:17px; box-shadow:0 10px 32px rgba(0,0,0,.2); backdrop-filter:blur(12px); }
+    .stat small, .muted, .notice { color:var(--muted); }
+    .stat strong { display:block; font-size:clamp(20px,3vw,26px); margin-top:6px; overflow-wrap:anywhere; }
+    .section { margin-top:30px; scroll-margin-top:125px; }
+    .section-head { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:12px; }
+    .section-head h2 { margin:0; }
+    .search, .field { width:100%; background:rgba(2,8,22,.88); border:1px solid var(--line); color:var(--text); padding:12px 13px; border-radius:10px; min-width:0; margin-top:5px; margin-bottom:10px; }
+    .tablewrap { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; min-width:620px; }
+    th, td { padding:13px 9px; text-align:left; border-bottom:1px solid rgba(40,62,96,.65); white-space:nowrap; }
+    th { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.04em; }
+    .coin { font-weight:800; }
+    .symbol { color:var(--muted); font-size:12px; margin-left:6px; }
+    .up { color:var(--green); } .down { color:var(--red); }
+    .pill { padding:4px 7px; border-radius:7px; font-size:12px; font-weight:800; }
+    .pill.up { background:rgba(66,230,174,.11); } .pill.down { background:rgba(255,123,139,.11); }
+    .star { border:1px solid var(--line); background:#132440; color:var(--gold); border-radius:8px; padding:7px 10px; }
+    .split { display:grid; grid-template-columns:minmax(0,1.5fr) minmax(260px,1fr); gap:14px; }
+    .chart-card { padding:0; overflow:hidden; }
+    .chart-head { padding:16px 17px 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+    .chart-frame { height:430px; width:100%; }
+    .chart-frame iframe { width:100%; height:100%; border:0; display:block; }
+    .chart-note { padding:0 17px 15px; color:var(--muted); font-size:12px; }
+    .adbox { min-height:210px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; border:1px dashed #3a5277; border-radius:14px; background:rgba(1,8,22,.45); padding:22px; }
+    .ad-label { text-transform:uppercase; font-size:11px; letter-spacing:.12em; color:var(--muted); margin-bottom:8px; }
+    .ad-placeholder { max-width:480px; }
+    .ad-placeholder p { color:var(--muted); }
+    .ad-slot { width:100%; min-height:90px; margin-top:12px; }
+    .two-col { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+    .tools { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+    .result { color:var(--blue); font-size:18px; font-weight:900; margin-top:10px; overflow-wrap:anywhere; }
+    .watch-item { padding:9px 0; border-bottom:1px solid rgba(40,62,96,.65); display:flex; justify-content:space-between; gap:10px; }
+    .news-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+    .notice { font-size:12px; line-height:1.6; }
+    footer { border-top:1px solid var(--line); padding:26px 16px; color:#8da0bd; text-align:center; background:rgba(2,6,23,.55); }
+    footer .links { display:flex; flex-wrap:wrap; justify-content:center; gap:14px; margin:10px 0; }
+    .error { color:var(--gold); }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    @media (max-width:850px) { .grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .split,.tools { grid-template-columns:1fr; } .news-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media (max-width:560px) {
+      .top { align-items:flex-start; } .status { display:none; } main { padding:16px 11px 42px; }
+      .card { padding:14px; border-radius:15px; } .grid,.two-col,.news-grid { grid-template-columns:1fr; }
+      .chart-frame { height:370px; } nav a { padding:10px 11px; } .section { scroll-margin-top:110px; }
     }
-    .btn.secondary { background: #142744; color: #e5efff; border: 1px solid var(--line); }
-    .btn:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
-    .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
-    .card {
-      min-width: 0; background: linear-gradient(145deg, rgba(11,23,48,.97), rgba(4,12,29,.97));
-      border: 1px solid var(--line); border-radius: 18px; padding: 17px;
-      box-shadow: 0 10px 32px rgba(0,0,0,.14);
-    }
-    .stat small, .muted { color: var(--muted); }
-    .stat strong { display: block; font-size: clamp(20px, 3vw, 26px); margin-top: 6px; overflow-wrap: anywhere; }
-    .section { margin-top: 28px; scroll-margin-top: 115px; }
-    .section-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
-    .section-head h2 { margin: 0; }
-    .search, .field {
-      width: 100%; background: #040c1e; border: 1px solid var(--line); color: var(--text);
-      padding: 12px 13px; border-radius: 10px; min-width: 0;
-    }
-    .search { margin-bottom: 12px; }
-    .tablewrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; min-width: 620px; }
-    th, td { padding: 13px 9px; text-align: left; border-bottom: 1px solid #182a47; white-space: nowrap; }
-    th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
-    .coin { font-weight: 800; }
-    .symbol { color: var(--muted); font-size: 12px; margin-left: 6px; }
-    .up { color: var(--green); } .down { color: var(--red); }
-    .pill { padding: 4px 7px; border-radius: 7px; font-size: 12px; font-weight: 800; }
-    .pill.up { background: rgba(36,209,138,.11); } .pill.down { background: rgba(255,102,122,.11); }
-    .star { border: 1px solid var(--line); background: #132440; color: var(--gold); border-radius: 8px; padding: 6px 10px; }
-    .split { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr); gap: 14px; }
-    .chart-card { padding: 0; overflow: hidden; }
-    .chart-head { padding: 16px 17px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-    .chart-frame { height: 430px; width: 100%; }
-    .chart-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
-    .chart-note { padding: 0 17px 15px; color: var(--muted); font-size: 12px; }
-    .adbox { min-height: 220px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border: 1px dashed #3a5277; background: rgba(1,8,22,.45); padding: 22px; }
-    .ad-label { text-transform: uppercase; font-size: 11px; letter-spacing: .12em; color: var(--muted); margin-bottom: 8px; }
-    .ad-placeholder { max-width: 480px; }
-    .ad-placeholder p { color: var(--muted); }
-    .ad-slot { width: 100%; min-height: 90px; margin-top: 12px; }
-    .two-col { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
-    .tools { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
-    .result { color: var(--blue); font-size: 20px; font-weight: 900; margin-top: 10px; overflow-wrap: anywhere; }
-    .watch-item { padding: 9px 0; border-bottom: 1px solid #182a47; display: flex; justify-content: space-between; gap: 10px; }
-    .news-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
-    .news-card p { color: var(--muted); }
-    .notice { color: var(--muted); font-size: 12px; line-height: 1.6; }
-    footer { border-top: 1px solid var(--line); padding: 26px 16px; color: #8da0bd; text-align: center; }
-    footer .links { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin: 10px 0; }
-    .error { color: var(--gold); }
-    @media (max-width: 850px) {
-      .grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
-      .split, .tools { grid-template-columns: 1fr; }
-      .news-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
-    }
-    @media (max-width: 560px) {
-      .top { align-items: flex-start; }
-      .status { display: none; }
-      main { padding: 16px 11px 42px; }
-      .card { padding: 14px; border-radius: 15px; }
-      .grid, .two-col, .news-grid { grid-template-columns: 1fr; }
-      .chart-frame { height: 370px; }
-      nav a { padding: 10px 11px; }
-      .section { scroll-margin-top: 105px; }
-    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } * { animation:none !important; transition:none !important; } }
   </style>
 </head>
 <body>
   <header>
     <div class="top">
       <div class="logo">⚡ DANIEL<span class="accent">X-BTC</span></div>
-      <div class="status"><span class="dot"></span><span id="connectionStatus">Preparing market data…</span></div>
+      <div class="status"><span class="dot"></span><span id="connectionStatus" role="status">Preparing market data…</span></div>
     </div>
     <nav aria-label="Main navigation">
-      <a href="#market">Market</a>
-      <a href="#chart">XRP Chart</a>
-      <a href="#advert">Advertising</a>
-      <a href="#news">News</a>
-      <a href="#tools">Tools</a>
-      <a href="#about">About</a>
+      <a href="#market">Market</a><a href="#chart">XRP Chart</a><a href="#advert">Advertising</a>
+      <a href="#news">News</a><a href="#tools">Tools</a><a href="#about">About</a>
     </nav>
   </header>
 
   <main>
     <section class="hero">
+      <div class="eyebrow">Market data • Research • Education</div>
       <h1>Crypto market intelligence.<br><span style="color:var(--green)">Built for your next move.</span></h1>
-      <p>Follow cryptocurrency prices, study the XRP chart, save assets to your watchlist and use simple market tools. Market data is informational only, not financial advice.</p>
-      <div class="actions">
-        <a class="btn" href="#market">View Live Market</a>
-        <a class="btn secondary" href="#chart">Open XRP Chart</a>
-      </div>
+      <p>Follow cryptocurrency prices, study the XRP chart, save assets to your watchlist and use simple market tools. Data is provided for information and education only, not financial advice.</p>
+      <div class="actions"><a class="btn" href="#market">View Live Market</a><a class="btn secondary" href="#chart">Open XRP Chart</a></div>
     </section>
 
     <section class="grid" aria-label="Featured cryptocurrency prices">
@@ -161,34 +153,24 @@
     </section>
 
     <section id="market" class="section">
-      <div class="section-head">
-        <h2>📊 Live Crypto Market</h2>
-        <button class="btn secondary" id="refreshBtn" type="button">Refresh prices</button>
-      </div>
-      <input id="marketSearch" class="search" type="search" placeholder="Search Bitcoin, XRP, SOL…" aria-label="Search market assets">
+      <div class="section-head"><h2>📊 Live Crypto Market</h2><button class="btn secondary" id="refreshBtn" type="button">Refresh prices</button></div>
+      <label class="sr-only" for="marketSearch">Search market assets</label>
+      <input id="marketSearch" class="search" type="search" placeholder="Search Bitcoin, XRP, SOL…" autocomplete="off">
       <div class="card tablewrap">
         <table>
           <thead><tr><th>Asset</th><th>Price (USD)</th><th>24h change</th><th>Market cap</th><th>Watchlist</th></tr></thead>
           <tbody id="marketBody"><tr><td colspan="5">Loading market prices…</td></tr></tbody>
         </table>
-        <p class="notice">Source: CoinGecko public market-data API. Prices can be delayed, unavailable or rate-limited. Last updated: <span id="lastUpdated">not yet</span>.</p>
-        <p id="marketError" class="notice error" role="status"></p>
+        <p class="notice">Source: CoinGecko public market-data API. Prices and market caps may be delayed, unavailable or rate-limited. Last updated: <span id="lastUpdated">not yet</span>.</p>
+        <p id="marketError" class="notice error" role="status" aria-live="polite"></p>
       </div>
     </section>
 
     <section id="chart" class="section">
-      <div class="section-head">
-        <h2>📈 Professional XRP Price Chart</h2>
-        <span class="muted">TradingView chart</span>
-      </div>
+      <div class="section-head"><h2>📈 XRP Price Chart</h2><span class="muted">TradingView chart</span></div>
       <div class="card chart-card">
-        <div class="chart-head">
-          <div><strong>XRP / USD</strong><div class="muted">Candlesticks, indicators and chart tools</div></div>
-          <a href="https://www.tradingview.com/chart/?symbol=BITSTAMP%3AXRPUSD" target="_blank" rel="noopener noreferrer">Open full chart ↗</a>
-        </div>
-        <div class="chart-frame">
-          <iframe title="XRP USD TradingView chart" loading="lazy" referrerpolicy="origin" src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_xrp&symbol=BITSTAMP%3AXRPUSD&interval=D&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=020617&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hideideas=1&studies=%5B%5D&locale=en"></iframe>
-        </div>
+        <div class="chart-head"><div><strong>XRP / USD</strong><div class="muted">Candlesticks, indicators and chart tools</div></div><a href="https://www.tradingview.com/chart/?symbol=BITSTAMP%3AXRPUSD" target="_blank" rel="noopener noreferrer">Open full chart ↗</a></div>
+        <div class="chart-frame"><iframe title="XRP USD TradingView chart" loading="lazy" referrerpolicy="origin" src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_xrp&symbol=BITSTAMP%3AXRPUSD&interval=D&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=020617&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hideideas=1&studies=%5B%5D&locale=en"></iframe></div>
         <p class="chart-note">Chart supplied by TradingView. Availability depends on the provider and your connection; it is separate from the market-price table.</p>
       </div>
     </section>
@@ -197,46 +179,22 @@
       <div id="advert" class="card">
         <div class="section-head"><h2>📣 Advertising</h2></div>
         <p class="muted">This area is reserved for approved advertising or clearly labelled sponsored placements.</p>
-        <div class="adbox">
-          <div class="ad-placeholder">
-            <div class="ad-label">Advertisement</div>
-            <h3>DanielX-BTC Ad Space</h3>
-            <p>Advert placements will appear here when configured. This placeholder does not generate revenue by itself.</p>
-          </div>
-        </div>
-        <!--
-          AFTER Google AdSense approval:
-          1. Replace YOUR_GOOGLE_ADSENSE_CLIENT_ID with your real ca-pub-... publisher ID.
-          2. Replace YOUR_AD_SLOT_ID with the ad unit ID from your AdSense account.
-          3. Uncomment the ins block below. Do not insert invented IDs.
-          4. Add the AdSense script once in the <head> as provided by your AdSense account.
-        -->
-        <!--
-        <ins class="adsbygoogle ad-slot"
-             style="display:block"
-             data-ad-client="YOUR_GOOGLE_ADSENSE_CLIENT_ID"
-             data-ad-slot="YOUR_AD_SLOT_ID"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        -->
-        <p class="notice">Do not click your own ads or ask visitors to click them. Follow Google AdSense policies and only display real ad code from your approved account.</p>
+        <div class="adbox"><div class="ad-placeholder"><div class="ad-label">Advertisement</div><h3>DanielX-BTC Ad Space</h3><p>This is a placeholder only. It does not display paid adverts or generate revenue by itself.</p></div></div>
+        <!-- When AdSense approves your site, use the exact code and IDs supplied in your AdSense account.
+             Do not invent publisher or ad-slot IDs. Do not click your own ads or encourage others to click. -->
+        <p class="notice">Ad display depends on approval, correct setup, policy compliance and advertiser demand. Approval and earnings are not guaranteed.</p>
       </div>
-      <div class="card">
-        <h2>🔥 Market Movers</h2>
-        <div id="trendList" class="muted">Loading market movers…</div>
-        <p class="notice">Sorted by reported 24-hour change among the assets shown below. This is not a prediction.</p>
-      </div>
+      <div class="card"><h2>🔥 Market Movers</h2><div id="trendList" class="muted">Loading market movers…</div><p class="notice">Sorted by the absolute reported 24-hour change among the assets displayed. This is not a prediction.</p></div>
     </section>
 
     <section id="news" class="section">
       <h2>📰 Crypto News & Research</h2>
       <div class="news-grid">
-        <article class="card news-card"><h3>Bitcoin market</h3><p>Read market coverage and analysis from an independent crypto news publisher.</p><a href="https://www.coindesk.com/markets/" target="_blank" rel="noopener noreferrer">Read market news ↗</a></article>
-        <article class="card news-card"><h3>XRP updates</h3><p>Follow market reports and developments relevant to XRP and digital assets.</p><a href="https://www.coindesk.com/markets/" target="_blank" rel="noopener noreferrer">Read updates ↗</a></article>
-        <article class="card news-card"><h3>Solana & altcoins</h3><p>Explore broader cryptocurrency coverage and market context.</p><a href="https://www.coindesk.com/markets/" target="_blank" rel="noopener noreferrer">Explore news ↗</a></article>
+        <article class="card"><h3>Bitcoin market</h3><p class="muted">Read market coverage and analysis from a third-party publisher.</p><a href="https://www.coindesk.com/markets/" target="_blank" rel="noopener noreferrer">Read market news ↗</a></article>
+        <article class="card"><h3>XRP updates</h3><p class="muted">Follow market reports and developments relevant to XRP and digital assets.</p><a href="https://www.coindesk.com/markets/" target="_blank" rel="noopener noreferrer">Read updates ↗</a></article>
+        <article class="card"><h3>Solana & altcoins</h3><p class="muted">Explore broader cryptocurrency coverage and market context.</p><a href="https://www.coindesk.com/markets/" target="_blank" rel="noopener noreferrer">Explore news ↗</a></article>
       </div>
-      <p class="notice">External links lead to third-party websites. DanielX-BTC does not control their content.</p>
+      <p class="notice">These are links to external news pages, not an automatically updated news feed. Third-party sites control their own content.</p>
     </section>
 
     <section id="tools" class="section">
@@ -244,91 +202,57 @@
       <div class="tools">
         <div class="card">
           <h3>🧮 Coin calculator</h3>
-          <label for="coinPrice">Coin price in USD</label>
-          <input id="coinPrice" class="field" type="number" min="0" step="any" placeholder="e.g. 0.50">
-          <label for="usdAmount">Amount in USD</label>
-          <input id="usdAmount" class="field" type="number" min="0" step="any" placeholder="e.g. 100">
-          <button id="calculateBtn" class="btn" type="button" style="margin-top:10px">Calculate coins</button>
-          <div id="calcResult" class="result" aria-live="polite">—</div>
+          <label for="coinPrice">Coin price in USD</label><input id="coinPrice" class="field" type="number" min="0" step="any" inputmode="decimal" placeholder="e.g. 0.50">
+          <label for="usdAmount">Amount in USD</label><input id="usdAmount" class="field" type="number" min="0" step="any" inputmode="decimal" placeholder="e.g. 100">
+          <button id="calculateBtn" class="btn" type="button">Calculate coins</button><div id="calcResult" class="result" aria-live="polite">—</div>
         </div>
         <div class="card">
-          <h3>⭐ Your watchlist</h3>
-          <p class="muted">Tap ☆ in the market table to save a coin on this device.</p>
-          <div id="watchList">No coins saved yet.</div>
-          <button id="clearWatch" class="btn secondary" type="button" style="margin-top:12px">Clear watchlist</button>
+          <h3>⭐ Your watchlist</h3><p class="muted">Tap ☆ in the market table to save a coin on this device.</p>
+          <div id="watchList">No coins saved yet.</div><button id="clearWatch" class="btn secondary" type="button" style="margin-top:12px">Clear watchlist</button>
         </div>
         <div class="card">
-          <h3>🔔 Price check reminder</h3>
-          <p class="muted">Choose a target price to calculate how far the current price is from it. This page does not send push notifications.</p>
-          <label for="alertCoin">Asset</label>
-          <select id="alertCoin" class="field">
-            <option value="ripple">XRP</option><option value="bitcoin">Bitcoin</option><option value="ethereum">Ethereum</option><option value="solana">Solana</option>
-          </select>
-          <label for="targetPrice">Target price (USD)</label>
-          <input id="targetPrice" class="field" type="number" min="0" step="any" placeholder="Enter target price">
-          <button id="checkTarget" class="btn" type="button" style="margin-top:10px">Check target</button>
-          <div id="targetResult" class="result" aria-live="polite">—</div>
+          <h3>🔔 Price target checker</h3><p class="muted">Check the distance between the current price and your target. This tool does not send push notifications.</p>
+          <label for="alertCoin">Asset</label><select id="alertCoin" class="field"><option value="ripple">XRP</option><option value="bitcoin">Bitcoin</option><option value="ethereum">Ethereum</option><option value="solana">Solana</option></select>
+          <label for="targetPrice">Target price (USD)</label><input id="targetPrice" class="field" type="number" min="0" step="any" inputmode="decimal" placeholder="Enter target price">
+          <button id="checkTarget" class="btn" type="button">Check target</button><div id="targetResult" class="result" aria-live="polite">—</div>
         </div>
       </div>
     </section>
 
     <section id="about" class="section two-col">
-      <div class="card">
-        <h2>About DanielX-BTC</h2>
-        <p class="muted">DanielX-BTC is a personal cryptocurrency information dashboard for checking public market data, exploring charts and learning with simple tools.</p>
-        <p class="notice">This site is not a bank, broker, exchange or financial adviser. It does not hold funds or execute trades.</p>
-      </div>
-      <div class="card">
-        <h2>Risk notice</h2>
-        <p class="muted">Crypto assets are volatile. You can lose some or all of the money you invest. Check information independently and never invest money you cannot afford to lose.</p>
-        <p class="notice">This website's sample tools and market displays do not promise profits or provide personalised investment advice.</p>
-      </div>
+      <div class="card"><h2>About DanielX-BTC</h2><p class="muted">DanielX-BTC is a cryptocurrency information dashboard for checking public market data, exploring charts and learning with simple tools.</p><p class="notice">This site is not a bank, broker, exchange or financial adviser. It does not hold funds or execute trades.</p></div>
+      <div class="card"><h2>Risk notice</h2><p class="muted">Crypto assets are volatile. You can lose some or all of the money you invest. Check information independently and never invest money you cannot afford to lose.</p><p class="notice">Tools on this website do not promise profits or provide personalised investment advice.</p></div>
     </section>
 
     <section id="privacy" class="section card">
-      <h2>Privacy Policy</h2>
-      <p><strong>Last updated: 11 October 2026</strong></p>
-      <p class="muted">DanielX-BTC is a static cryptocurrency information dashboard. This page should be reviewed and adapted to match the services actually enabled on the website.</p>
-      <h3>Market data and third-party services</h3>
-      <p class="muted">The site may request public cryptocurrency market data from CoinGecko and display a TradingView chart. Those providers may receive technical information such as your IP address when your browser connects to their services. External links are governed by the privacy policies of those websites.</p>
-      <h3>Local storage</h3>
-      <p class="muted">Your watchlist may be stored in your browser on this device. It is not an account and does not sync across devices.</p>
-      <h3>Advertising cookies</h3>
-      <p class="muted">If Google AdSense is enabled after approval, Google and its partners may use cookies or similar technologies to serve and measure ads according to applicable settings and laws. Update this policy and configure any required consent tools before enabling advertising.</p>
-      <h3>Your choices</h3>
-      <p class="muted">You can manage cookies in your browser settings. This static website does not currently provide a server-based account or process privacy requests.</p>
-      <p class="notice">This is a starter policy, not legal advice. Ensure it accurately describes your actual website and legal obligations before submitting it for review.</p>
+      <h2>Privacy Policy</h2><p><strong>Last updated: 12 October 2026</strong></p>
+      <p class="muted">This policy is a starting point and must accurately reflect the website's actual features and services.</p>
+      <h3>Market data and third-party services</h3><p class="muted">This site may request public cryptocurrency market data from CoinGecko and display a TradingView chart. When your browser connects to third-party services, those providers may receive technical information such as your IP address. External websites have their own privacy policies.</p>
+      <h3>Local storage</h3><p class="muted">Your watchlist may be stored in local browser storage on this device. It is not an account and does not sync across devices. You can clear it using the watchlist control or your browser settings.</p>
+      <h3>Advertising</h3><p class="muted">If advertising services such as Google AdSense are enabled, Google and its partners may use cookies or similar technologies to serve, personalise where permitted, and measure ads, subject to applicable settings and laws. Add any required consent or privacy controls before enabling ads.</p>
+      <h3>Your choices and contact</h3><p class="muted">You can manage browser storage and cookies in your browser settings. For website questions, contact <a href="mailto:DanielEzeigbo01@gmail.com">DanielEzeigbo01@gmail.com</a>. This static website does not currently provide user accounts or a server-based privacy-request system.</p>
+      <p class="notice">This is not legal advice. Check the requirements that apply to your actual services, visitors and jurisdiction before relying on this policy.</p>
     </section>
 
     <section id="contact" class="section card">
-      <h2>Contact DanielX-BTC</h2>
-      <p class="muted">For website questions or corrections, email <a href="mailto:DanielEzeigbo01@gmail.com">DanielEzeigbo01@gmail.com</a>.</p>
-      <p class="notice">Do not send passwords, wallet seed phrases, private keys or other sensitive financial information by email.</p>
+      <h2>Contact DanielX-BTC</h2><p class="muted">For website questions or corrections, email <a href="mailto:DanielEzeigbo01@gmail.com">DanielEzeigbo01@gmail.com</a>.</p>
+      <p class="notice">Never send passwords, wallet seed phrases, private keys or other sensitive financial information by email.</p>
     </section>
 
     <section id="terms" class="section card">
-      <h2>Terms & risk disclaimer</h2>
-      <p class="muted">DanielX-BTC provides general information and educational tools only. It is not a bank, broker, exchange or financial adviser. It does not hold customer funds or execute trades. Market data may be delayed or unavailable. Cryptocurrency assets are volatile and you may lose some or all of your investment. Verify information independently and seek qualified advice where appropriate.</p>
+      <h2>Terms of Use & Risk Disclaimer</h2>
+      <p class="muted">DanielX-BTC provides general information and educational tools only. It is not a bank, broker, exchange or financial adviser. It does not hold customer funds or execute trades. Market data may be delayed, incomplete or unavailable. Cryptocurrency assets are volatile and you may lose some or all of your investment. Verify information independently and seek qualified advice where appropriate. Third-party links and embedded charts are provided for convenience; their operators control their content and availability.</p>
     </section>
   </main>
 
   <footer>
     <strong>⚡ DANIELX-BTC</strong>
-    <div class="links">
-      <a href="#about">About</a>
-      <a href="#privacy">Privacy</a>
-      <a href="#contact">Contact</a>
-      <a href="#advert">Advertising</a>
-      <a href="#news">News</a>
-      <a href="#market">Market</a>
-    </div>
-    <div>Crypto market • XRP chart • Watchlist • Tools</div>
-    <div>© <span id="year"></span> DanielX-BTC</div>
+    <div class="links"><a href="#about">About</a><a href="#privacy">Privacy</a><a href="#terms">Terms</a><a href="#contact">Contact</a><a href="#advert">Advertising</a><a href="#news">News</a><a href="#market">Market</a></div>
+    <div>Crypto market • XRP chart • Watchlist • Educational tools</div><div>© <span id="year"></span> DanielX-BTC</div>
   </footer>
 
   <script>
     "use strict";
-
     const COINS = [
       { id: "bitcoin", name: "Bitcoin", symbol: "BTC" },
       { id: "ethereum", name: "Ethereum", symbol: "ETH" },
@@ -343,6 +267,7 @@
     ];
     const COIN_IDS = COINS.map(c => c.id);
     let marketCoins = [];
+    let loading = false;
     let watchlist = loadWatchlist();
 
     function loadWatchlist() {
@@ -356,26 +281,23 @@
     }
     function money(value) {
       if (value === null || value === undefined || !Number.isFinite(Number(value))) return "—";
-      return new Intl.NumberFormat("en-US", {
-        style: "currency", currency: "USD",
-        minimumFractionDigits: Number(value) < 1 ? 4 : 2,
-        maximumFractionDigits: Number(value) < 1 ? 8 : 2
-      }).format(Number(value));
+      const n = Number(value);
+      return new Intl.NumberFormat("en-US", { style:"currency", currency:"USD", minimumFractionDigits:n < 1 ? 4 : 2, maximumFractionDigits:n < 1 ? 8 : 2 }).format(n);
     }
     function compactMoney(value) {
       const n = Number(value);
-      if (!Number.isFinite(n) || n <= 0) return "—";
+      if (!Number.isFinite(n) || n < 0) return "—";
       if (n >= 1e12) return "$" + (n / 1e12).toFixed(2) + "T";
       if (n >= 1e9) return "$" + (n / 1e9).toFixed(2) + "B";
       if (n >= 1e6) return "$" + (n / 1e6).toFixed(2) + "M";
       return money(n);
     }
     function safeText(value) {
-      return String(value ?? "").replace(/[&<>"']/g, ch => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-      }[ch]));
+      return String(value ?? "").replace(/[&<>"']/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch]));
     }
     async function loadMarket() {
+      if (loading) return;
+      loading = true;
       const status = document.getElementById("connectionStatus");
       const error = document.getElementById("marketError");
       const body = document.getElementById("marketBody");
@@ -388,60 +310,49 @@
         const url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=" +
           encodeURIComponent(COIN_IDS.join(",")) +
           "&order=market_cap_desc&per_page=20&page=1&sparkline=false&price_change_percentage=24h";
-        const response = await fetch(url, { headers: { "accept": "application/json" }, cache: "no-store" });
+        const response = await fetch(url, { headers: { "accept":"application/json" }, cache:"no-store" });
         if (!response.ok) throw new Error("Market API returned HTTP " + response.status);
         const data = await response.json();
         if (!Array.isArray(data) || !data.length) throw new Error("No market data was returned.");
         marketCoins = data;
-        renderMarket();
-        renderStats();
-        renderTrending();
-        renderWatchlist();
+        renderMarket(); renderStats(); renderTrending(); renderWatchlist();
         document.getElementById("lastUpdated").textContent = new Date().toLocaleString();
         status.textContent = "Market data connected";
-      } catch (errorObject) {
+      } catch (_) {
         status.textContent = "Market data unavailable";
-        error.textContent = "Could not load live prices right now. This may be a temporary connection or API limit issue. Tap Refresh prices or try again later.";
+        error.textContent = "Live prices could not be loaded. Your internet connection or the public API may be temporarily unavailable or rate-limited. Tap Refresh prices or try again later.";
         if (!marketCoins.length) body.innerHTML = '<tr><td colspan="5">Live prices are temporarily unavailable. Please refresh later.</td></tr>';
         document.getElementById("trendList").textContent = "Market movers are unavailable until prices load.";
       } finally {
+        loading = false;
         refresh.disabled = false;
         refresh.textContent = "Refresh prices";
       }
     }
     function renderMarket() {
       const query = document.getElementById("marketSearch").value.trim().toLowerCase();
-      const filtered = marketCoins.filter(c =>
-        (c.name + " " + c.symbol).toLowerCase().includes(query)
-      );
+      const filtered = marketCoins.filter(c => (c.name + " " + c.symbol).toLowerCase().includes(query));
       const body = document.getElementById("marketBody");
-      if (!filtered.length) {
-        body.innerHTML = '<tr><td colspan="5">No matching assets found.</td></tr>';
-        return;
-      }
+      if (!filtered.length) { body.innerHTML = '<tr><td colspan="5">No matching assets found.</td></tr>'; return; }
       body.innerHTML = filtered.map(c => {
         const meta = COINS.find(item => item.id === c.id);
         const symbol = meta ? meta.symbol : String(c.symbol || "").toUpperCase();
         const name = meta ? meta.name : c.name;
         const change = Number(c.price_change_percentage_24h);
-        const positive = Number.isFinite(change) && change >= 0;
+        const validChange = Number.isFinite(change);
+        const positive = validChange && change >= 0;
         const starred = watchlist.includes(c.id);
         return `<tr>
           <td><span class="coin">${safeText(name)}</span><span class="symbol">${safeText(symbol)}</span></td>
           <td>${money(c.current_price)}</td>
-          <td><span class="pill ${positive ? "up" : "down"}">${Number.isFinite(change) ? (positive ? "+" : "") + change.toFixed(2) + "%" : "—"}</span></td>
+          <td><span class="pill ${positive ? "up" : "down"}">${validChange ? (positive ? "+" : "") + change.toFixed(2) + "%" : "—"}</span></td>
           <td>${compactMoney(c.market_cap)}</td>
           <td><button class="star" type="button" data-watch-id="${safeText(c.id)}" aria-label="${starred ? "Remove from" : "Add to"} watchlist">${starred ? "★ Saved" : "☆ Save"}</button></td>
         </tr>`;
       }).join("");
     }
     function renderStats() {
-      const mapping = [
-        ["bitcoin", "btcStat", "btcChange"],
-        ["ethereum", "ethStat", "ethChange"],
-        ["ripple", "xrpStat", "xrpChange"],
-        ["solana", "solStat", "solChange"]
-      ];
+      const mapping = [["bitcoin","btcStat","btcChange"],["ethereum","ethStat","ethChange"],["ripple","xrpStat","xrpChange"],["solana","solStat","solChange"]];
       mapping.forEach(([id, priceId, changeId]) => {
         const coin = marketCoins.find(item => item.id === id);
         if (!coin) return;
@@ -453,13 +364,10 @@
       });
     }
     function renderTrending() {
-      const movers = [...marketCoins].sort((a, b) =>
-        Math.abs(Number(b.price_change_percentage_24h) || 0) -
-        Math.abs(Number(a.price_change_percentage_24h) || 0)
-      ).slice(0, 5);
+      const movers = [...marketCoins].sort((a,b) => Math.abs(Number(b.price_change_percentage_24h) || 0) - Math.abs(Number(a.price_change_percentage_24h) || 0)).slice(0,5);
       document.getElementById("trendList").innerHTML = movers.map(c => {
         const change = Number(c.price_change_percentage_24h);
-        const cls = change >= 0 ? "up" : "down";
+        const cls = Number.isFinite(change) && change >= 0 ? "up" : "down";
         return `<div class="watch-item"><span>${safeText(c.name)} <span class="symbol">${safeText(String(c.symbol).toUpperCase())}</span></span><strong class="${cls}">${Number.isFinite(change) ? (change >= 0 ? "+" : "") + change.toFixed(2) + "%" : "—"}</strong></div>`;
       }).join("");
     }
@@ -476,40 +384,40 @@
       if (!button) return;
       const id = button.getAttribute("data-watch-id");
       watchlist = watchlist.includes(id) ? watchlist.filter(item => item !== id) : [...watchlist, id];
-      saveWatchlist();
-      renderMarket();
-      renderWatchlist();
+      saveWatchlist(); renderMarket(); renderWatchlist();
     });
     document.getElementById("marketSearch").addEventListener("input", renderMarket);
     document.getElementById("refreshBtn").addEventListener("click", loadMarket);
     document.getElementById("clearWatch").addEventListener("click", () => {
-      watchlist = [];
-      saveWatchlist();
-      renderMarket();
-      renderWatchlist();
+      watchlist = []; saveWatchlist(); renderMarket(); renderWatchlist();
     });
     document.getElementById("calculateBtn").addEventListener("click", () => {
-      const price = Number(document.getElementById("coinPrice").value);
-      const amount = Number(document.getElementById("usdAmount").value);
-      document.getElementById("calcResult").textContent =
-        price > 0 && amount >= 0 ? (amount / price).toLocaleString(undefined, { maximumFractionDigits: 8 }) + " coins" : "Enter a valid price and amount.";
+      const priceRaw = document.getElementById("coinPrice").value;
+      const amountRaw = document.getElementById("usdAmount").value;
+      const price = Number(priceRaw), amount = Number(amountRaw);
+      const output = document.getElementById("calcResult");
+      if (priceRaw === "" || amountRaw === "" || !Number.isFinite(price) || !Number.isFinite(amount) || price <= 0 || amount < 0) {
+        output.textContent = "Enter a coin price above zero and a valid amount."; return;
+      }
+      output.textContent = (amount / price).toLocaleString(undefined, { maximumFractionDigits:8 }) + " coins (before fees)";
     });
     document.getElementById("checkTarget").addEventListener("click", () => {
       const id = document.getElementById("alertCoin").value;
-      const target = Number(document.getElementById("targetPrice").value);
+      const targetRaw = document.getElementById("targetPrice").value;
+      const target = Number(targetRaw);
       const coin = marketCoins.find(item => item.id === id);
       const result = document.getElementById("targetResult");
       if (!coin) { result.textContent = "Current market price is not available yet."; return; }
-      if (!(target > 0)) { result.textContent = "Enter a target price above zero."; return; }
+      if (targetRaw === "" || !Number.isFinite(target) || target <= 0) { result.textContent = "Enter a target price above zero."; return; }
       const current = Number(coin.current_price);
+      if (!Number.isFinite(current) || current <= 0) { result.textContent = "Current market price is unavailable."; return; }
       const difference = ((target - current) / current) * 100;
       result.textContent = `Current ${money(current)} · Target ${money(target)} · ${difference >= 0 ? "+" : ""}${difference.toFixed(2)}% to target`;
     });
     document.getElementById("year").textContent = new Date().getFullYear();
-
     renderWatchlist();
     loadMarket();
-    // Refresh every two minutes to reduce pressure on the public API.
+    // Refresh every 2 minutes. This does not guarantee uninterrupted live data.
     setInterval(loadMarket, 120000);
   </script>
 </body>
